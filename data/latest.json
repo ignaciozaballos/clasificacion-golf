@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T10:46:50.758431+00:00",
+  "generated_at": "2026-09-09T10:53:08.192239+00:00",
   "players": [
     {
       "id": "guillermo",
@@ -12,8 +12,8 @@
       "ultima_modificacion_display": "06-08-2023",
       "error": null,
       "rank": 1,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 1,
+      "trend": "same"
     },
     {
       "id": "jose_luis",
@@ -26,8 +26,8 @@
       "ultima_modificacion_display": "07-08-2026",
       "error": null,
       "rank": 2,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 2,
+      "trend": "same"
     },
     {
       "id": "francisco_lassala",
@@ -40,8 +40,8 @@
       "ultima_modificacion_display": "14-12-2025",
       "error": null,
       "rank": 3,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 3,
+      "trend": "same"
     },
     {
       "id": "andres",
@@ -54,8 +54,8 @@
       "ultima_modificacion_display": "12-08-2026",
       "error": null,
       "rank": 4,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 4,
+      "trend": "same"
     },
     {
       "id": "javier_carbonell",
@@ -68,8 +68,8 @@
       "ultima_modificacion_display": "18-06-2025",
       "error": null,
       "rank": 5,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 5,
+      "trend": "same"
     },
     {
       "id": "carlos",
@@ -82,8 +82,8 @@
       "ultima_modificacion_display": "04-08-2024",
       "error": null,
       "rank": 6,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 6,
+      "trend": "same"
     },
     {
       "id": "francisco_ceacero",
@@ -96,8 +96,8 @@
       "ultima_modificacion_display": "06-08-2026",
       "error": null,
       "rank": 7,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 7,
+      "trend": "same"
     },
     {
       "id": "ignacio",
@@ -110,8 +110,8 @@
       "ultima_modificacion_display": "12-08-2026",
       "error": null,
       "rank": 8,
-      "prev_rank": 1,
-      "trend": "down"
+      "prev_rank": 8,
+      "trend": "same"
     },
     {
       "id": "javier_martinez",
@@ -124,8 +124,8 @@
       "ultima_modificacion_display": "14-04-2026",
       "error": null,
       "rank": 9,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 9,
+      "trend": "same"
     },
     {
       "id": "ignasi",
@@ -138,8 +138,8 @@
       "ultima_modificacion_display": "30-03-2025",
       "error": null,
       "rank": 10,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 10,
+      "trend": "same"
     },
     {
       "id": "javier_rico",
@@ -152,8 +152,8 @@
       "ultima_modificacion_display": "04-12-2022",
       "error": null,
       "rank": 11,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 11,
+      "trend": "same"
     },
     {
       "id": "alvaro",
@@ -166,8 +166,8 @@
       "ultima_modificacion_display": "08-02-2024",
       "error": null,
       "rank": 12,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 12,
+      "trend": "same"
     },
     {
       "id": "pablo",
@@ -180,8 +180,8 @@
       "ultima_modificacion_display": "25-05-2025",
       "error": null,
       "rank": 13,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 13,
+      "trend": "same"
     },
     {
       "id": "marcos",
@@ -194,8 +194,8 @@
       "ultima_modificacion_display": "01-07-2025",
       "error": null,
       "rank": 14,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 14,
+      "trend": "same"
     },
     {
       "id": "juan_carlos",
@@ -208,8 +208,8 @@
       "ultima_modificacion_display": "30-03-2025",
       "error": null,
       "rank": 15,
-      "prev_rank": null,
-      "trend": "new"
+      "prev_rank": 15,
+      "trend": "same"
     }
   ]
 }
