@@ -1,4 +1,19 @@
 {
-  "generated_at": null,
-  "players": []
+  "generated_at": "2026-09-09T10:34:06.543802+00:00",
+  "players": [
+    {
+      "id": "ignacio",
+      "nombre": null,
+      "licencia": null,
+      "handicap": null,
+      "handicap_display": null,
+      "estado": null,
+      "ultima_modificacion": null,
+      "ultima_modificacion_display": null,
+      "error": "no se encontró una fila que coincida con la licencia esperada",
+      "rank": null,
+      "prev_rank": null,
+      "trend": "new"
+    }
+  ]
 }
