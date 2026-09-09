@@ -98,20 +98,50 @@ def fetch_player(friend: dict) -> dict:
 
     rows = table.find_all("tr")
     candidate = None
-    expected_lic = friend.get("licencia_esperada", "").strip().upper()
+    all_candidates = []
+    expected_lic = re.sub(r"\s+", "", friend.get("licencia_esperada", "")).upper()
+    lic_pattern = re.compile(r"^[A-Za-z]{1,3}\d{4,}$")
 
     for row in rows:
         cells = [c.get_text(strip=True) for c in row.find_all("td")]
         if len(cells) < 5:
             continue  # fila de cabecera u otra cosa
-        nombre, licencia, handicap, estado, fecha = cells[:5]
-        if expected_lic and licencia.strip().upper() != expected_lic:
+
+        # La tabla incluye columnas vacías de maquetación (botones, etc.) antes
+        # y después de los datos, así que la licencia no está siempre en la
+        # misma posición. La localizamos por su formato (letras + números) y
+        # leemos el resto de columnas en relación a ella.
+        lic_idx = None
+        for i, c in enumerate(cells):
+            if lic_pattern.fullmatch(c):
+                lic_idx = i
+                break
+        if lic_idx is None or lic_idx < 1 or lic_idx + 3 >= len(cells):
+            continue
+
+        nombre = cells[lic_idx - 1]
+        licencia = cells[lic_idx]
+        handicap = cells[lic_idx + 1]
+        estado = cells[lic_idx + 2]
+        fecha = cells[lic_idx + 3]
+
+        all_candidates.append((nombre, licencia, handicap, estado, fecha))
+
+        lic_norm = re.sub(r"\s+", "", licencia).upper()
+        if expected_lic and lic_norm != expected_lic:
             continue
         candidate = (nombre, licencia, handicap, estado, fecha)
         break
 
     if candidate is None:
-        result["error"] = "no se encontró una fila que coincida con la licencia esperada"
+        if all_candidates:
+            found = "; ".join(f"{n} ({l})" for n, l, h, e, f in all_candidates)
+            result["error"] = (
+                f"no se encontró una fila que coincida con la licencia esperada "
+                f"'{expected_lic}'. Filas encontradas: {found}"
+            )
+        else:
+            result["error"] = "no se encontró ninguna fila de datos reconocible en la tabla"
         return result
 
     nombre, licencia, handicap, estado, fecha = candidate
