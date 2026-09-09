@@ -161,7 +161,6 @@
 
   .row.you {
     box-shadow: inset 4px 0 0 var(--fairway);
-    padding-left: calc(0.25rem + 6px);
   }
 
   .row.rank-1,
@@ -169,9 +168,7 @@
   .row.rank-3,
   .row.rank-4,
   .row.rank-5 {
-    margin: 2px -0.5rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    margin: 2px 0;
     border-bottom: none;
     border-radius: 6px;
   }
@@ -181,14 +178,6 @@
   .row.rank-3 { background: var(--bronze-bg); --row-ink: var(--bronze-ink); }
   .row.rank-4,
   .row.rank-5 { background: var(--top5-bg); --row-ink: var(--top5-ink); }
-
-  .row.rank-1.you,
-  .row.rank-2.you,
-  .row.rank-3.you,
-  .row.rank-4.you,
-  .row.rank-5.you {
-    padding-left: calc(0.75rem + 6px);
-  }
 
   .rank {
     font-family: 'Fraunces', serif;
@@ -200,6 +189,29 @@
     font-size: 15px;
     font-weight: 500;
     color: var(--row-ink, var(--ink));
+  }
+
+  .player {
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin: -2px 0 -2px -8px;
+  }
+
+  .player:hover,
+  .row.selected .player {
+    background: var(--fairway);
+  }
+
+  .player:hover .name,
+  .row.selected .player .name {
+    color: var(--cream);
+  }
+
+  .player:hover .status-line,
+  .row.selected .player .status-line {
+    color: var(--cream);
   }
 
   .status-line {
@@ -297,7 +309,7 @@
         <line x1="9" y1="19.5" x2="9" y2="16"/>
         <line x1="15" y1="19.5" x2="15" y2="16"/>
       </svg>
-      <span>LIGA DE HÁNDICAP</span>
+      <span>CLASIFICACIÓN</span>
       <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
         <line x1="6" y1="2.5" x2="6" y2="21" stroke="#8C8A7E" stroke-width="1.6" stroke-linecap="round"/>
         <path d="M6 4 L16.5 7.2 L6 10.4 Z" fill="#B5473A"/>
@@ -429,7 +441,7 @@
 
       li.innerHTML = `
         <div class="rank">${p.rank ?? '–'}</div>
-        <div>
+        <div class="player">
           <div class="name">${p.nombre ?? '(sin datos)'}</div>
           ${errorNote}
         </div>
@@ -441,6 +453,15 @@
       board.appendChild(li);
     }
   }
+
+  board.addEventListener('click', function (e) {
+    const playerEl = e.target.closest('.player');
+    if (!playerEl) return;
+    const row = playerEl.closest('.row');
+    const wasSelected = row.classList.contains('selected');
+    board.querySelectorAll('.row.selected').forEach(r => r.classList.remove('selected'));
+    if (!wasSelected) row.classList.add('selected');
+  });
 
   function render(snapshot) {
     currentSnapshot = snapshot;
