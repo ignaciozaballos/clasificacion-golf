@@ -21,6 +21,14 @@
     --down-bg: #F4E4E1;
     --same: #A9791F;
     --same-bg: #F2E9D4;
+    --gold-bg: #E7C766;
+    --gold-ink: #4A3600;
+    --silver-bg: #D9DBD3;
+    --silver-ink: #33362F;
+    --bronze-bg: #D6A06A;
+    --bronze-ink: #432808;
+    --top5-bg: #EFE7C9;
+    --top5-ink: #3B3620;
   }
 
   * { box-sizing: border-box; }
@@ -34,7 +42,7 @@
   }
 
   .page {
-    max-width: 640px;
+    max-width: 720px;
     margin: 0 auto;
     padding: 3rem 1.5rem 4rem;
   }
@@ -46,15 +54,25 @@
     border-bottom: 2px solid var(--fairway);
     padding-bottom: 1.25rem;
     margin-bottom: 0.25rem;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  h1 {
+  h1.title {
     font-family: 'Fraunces', serif;
     font-weight: 600;
-    font-size: 32px;
+    font-size: 30px;
     margin: 0;
     color: var(--fairway);
-    letter-spacing: -0.01em;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .title-icon {
+    flex-shrink: 0;
+    color: var(--fairway);
   }
 
   .updated {
@@ -65,20 +83,28 @@
     line-height: 1.5;
   }
 
+  .board-wrap {
+    overflow-x: auto;
+  }
+
   .col-heads {
     display: grid;
-    grid-template-columns: 32px 1fr 70px 60px 88px;
-    gap: 12px;
+    grid-template-columns: 28px minmax(130px, 1fr) 100px 54px 30px 78px;
+    gap: 10px;
+    min-width: 480px;
     padding: 0.75rem 0.25rem 0.5rem;
     font-size: 12px;
     color: var(--ink-soft);
     border-bottom: 1px solid var(--cream-line);
   }
 
-  .col-heads span:nth-child(3),
   .col-heads span:nth-child(4),
-  .col-heads span:nth-child(5) {
+  .col-heads span:nth-child(6) {
     text-align: right;
+  }
+
+  .col-heads span:nth-child(5) {
+    text-align: center;
   }
 
   ol.board {
@@ -89,31 +115,55 @@
 
   .row {
     display: grid;
-    grid-template-columns: 32px 1fr 70px 60px 88px;
-    gap: 12px;
+    grid-template-columns: 28px minmax(130px, 1fr) 100px 54px 30px 78px;
+    gap: 10px;
+    min-width: 480px;
     align-items: center;
     padding: 0.85rem 0.25rem;
     border-bottom: 1px solid var(--cream-line);
   }
 
   .row.you {
-    background: rgba(31, 58, 46, 0.05);
-    margin: 0 -0.25rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    box-shadow: inset 4px 0 0 var(--fairway);
+    padding-left: calc(0.25rem + 6px);
+  }
+
+  .row.rank-1,
+  .row.rank-2,
+  .row.rank-3,
+  .row.rank-4,
+  .row.rank-5 {
+    margin: 2px -0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border-bottom: none;
     border-radius: 6px;
+  }
+
+  .row.rank-1 { background: var(--gold-bg); --row-ink: var(--gold-ink); }
+  .row.rank-2 { background: var(--silver-bg); --row-ink: var(--silver-ink); }
+  .row.rank-3 { background: var(--bronze-bg); --row-ink: var(--bronze-ink); }
+  .row.rank-4,
+  .row.rank-5 { background: var(--top5-bg); --row-ink: var(--top5-ink); }
+
+  .row.rank-1.you,
+  .row.rank-2.you,
+  .row.rank-3.you,
+  .row.rank-4.you,
+  .row.rank-5.you {
+    padding-left: calc(0.75rem + 6px);
   }
 
   .rank {
     font-family: 'Fraunces', serif;
     font-size: 18px;
-    color: var(--fairway-soft);
+    color: var(--row-ink, var(--fairway-soft));
   }
 
   .name {
     font-size: 15px;
     font-weight: 500;
-    color: var(--ink);
+    color: var(--row-ink, var(--ink));
   }
 
   .status-line {
@@ -122,11 +172,18 @@
     margin-top: 2px;
   }
 
+  .licencia {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--row-ink, var(--ink-soft));
+  }
+
   .handicap {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 16px;
     text-align: right;
     font-weight: 500;
+    color: var(--row-ink, var(--ink));
   }
 
   .trend {
@@ -154,7 +211,7 @@
     font-family: 'IBM Plex Mono', monospace;
     font-size: 12px;
     text-align: right;
-    color: var(--ink-soft);
+    color: var(--row-ink, var(--ink-soft));
   }
 
   .legend {
@@ -190,19 +247,38 @@
 <div class="page">
 
   <div class="masthead">
-    <h1>Liga de hándicap</h1>
+    <h1 class="title">
+      <svg class="title-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M8 3.5h8v3.5a4 4 0 0 1-8 0V3.5z"/>
+        <path d="M8 4.5H5.2a1 1 0 0 0-1 1v.8a3 3 0 0 0 3 3"/>
+        <path d="M16 4.5h2.8a1 1 0 0 1 1 1v.8a3 3 0 0 1-3 3"/>
+        <line x1="12" y1="11" x2="12" y2="15"/>
+        <line x1="9" y1="19.5" x2="15" y2="19.5"/>
+        <line x1="9" y1="19.5" x2="9" y2="16"/>
+        <line x1="15" y1="19.5" x2="15" y2="16"/>
+      </svg>
+      <span>LIGA DE HÁNDICAP</span>
+      <svg class="title-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="6" y1="2.5" x2="6" y2="21"/>
+        <path d="M6 4l10.5 3.2L6 10.4"/>
+        <circle cx="17.5" cy="19" r="1.7" fill="currentColor" stroke="none"/>
+      </svg>
+    </h1>
     <div class="updated" id="updated">cargando…</div>
   </div>
 
-  <div class="col-heads">
-    <span>#</span>
-    <span>Jugador</span>
-    <span>Hcp</span>
-    <span></span>
-    <span>Modif.</span>
-  </div>
+  <div class="board-wrap">
+    <div class="col-heads">
+      <span>#</span>
+      <span>Jugador</span>
+      <span>Licencia</span>
+      <span>Hcp</span>
+      <span></span>
+      <span>Últ. act.</span>
+    </div>
 
-  <ol class="board" id="board"></ol>
+    <ol class="board" id="board"></ol>
+  </div>
 
   <div id="state-area"></div>
 
@@ -236,6 +312,16 @@
     return `${d}/${m}/${y}`;
   }
 
+  function fmtDaysAgo(iso) {
+    if (!iso) return '—';
+    const then = new Date(iso + 'T00:00:00');
+    const now = new Date();
+    const days = Math.max(0, Math.floor((now - then) / (1000 * 60 * 60 * 24)));
+    if (days === 0) return 'Hoy';
+    if (days === 1) return 'Ayer';
+    return `Hace ${days} d.`;
+  }
+
   function fmtTimestamp(iso) {
     if (!iso) return '';
     const dt = new Date(iso);
@@ -265,7 +351,8 @@
 
     for (const p of players) {
       const li = document.createElement('li');
-      li.className = 'row' + (p.id === CONFIG.YOU_ID ? ' you' : '');
+      const rankClass = (p.rank && p.rank <= 5) ? ` rank-${p.rank}` : '';
+      li.className = 'row' + rankClass + (p.id === CONFIG.YOU_ID ? ' you' : '');
 
       const errorNote = p.error
         ? `<div class="status-line" style="color: var(--down);">${p.error}</div>`
@@ -281,9 +368,10 @@
           <div class="name">${p.nombre ?? '(sin datos)'}</div>
           ${errorNote}
         </div>
+        <div class="licencia">${p.licencia ?? '—'}</div>
         <div class="handicap">${p.handicap_display ?? '—'}</div>
         <div class="trend"><span class="pill ${t.cls}" title="${p.trend}">${t.glyph}</span></div>
-        <div class="mod">${fmtDate(p.ultima_modificacion)}</div>
+        <div class="mod" title="${fmtDate(p.ultima_modificacion)}">${fmtDaysAgo(p.ultima_modificacion)}</div>
       `;
       board.appendChild(li);
     }
