@@ -157,6 +157,19 @@
     align-items: center;
     padding: 0.85rem 0.25rem;
     border-bottom: 1px solid var(--cream-line);
+    background: var(--cream);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .row:hover,
+  .row.selected {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(33, 38, 31, 0.18);
+    border-radius: 6px;
+    border-bottom-color: transparent;
+    position: relative;
+    z-index: 2;
   }
 
   .row.you {
@@ -189,29 +202,6 @@
     font-size: 15px;
     font-weight: 500;
     color: var(--row-ink, var(--ink));
-  }
-
-  .player {
-    cursor: pointer;
-    display: inline-block;
-    border-radius: 4px;
-    padding: 2px 8px;
-    margin: -2px 0 -2px -8px;
-  }
-
-  .player:hover,
-  .row.selected .player {
-    background: var(--fairway);
-  }
-
-  .player:hover .name,
-  .row.selected .player .name {
-    color: var(--cream);
-  }
-
-  .player:hover .status-line,
-  .row.selected .player .status-line {
-    color: var(--cream);
   }
 
   .status-line {
@@ -441,7 +431,7 @@
 
       li.innerHTML = `
         <div class="rank">${p.rank ?? '–'}</div>
-        <div class="player">
+        <div>
           <div class="name">${p.nombre ?? '(sin datos)'}</div>
           ${errorNote}
         </div>
@@ -455,9 +445,8 @@
   }
 
   board.addEventListener('click', function (e) {
-    const playerEl = e.target.closest('.player');
-    if (!playerEl) return;
-    const row = playerEl.closest('.row');
+    const row = e.target.closest('.row');
+    if (!row) return;
     const wasSelected = row.classList.contains('selected');
     board.querySelectorAll('.row.selected').forEach(r => r.classList.remove('selected'));
     if (!wasSelected) row.classList.add('selected');
