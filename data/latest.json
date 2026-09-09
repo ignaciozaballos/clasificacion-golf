@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-09-09T10:34:06.543802+00:00",
+  "generated_at": "2026-09-09T10:37:24.823787+00:00",
   "players": [
     {
       "id": "ignacio",
-      "nombre": null,
-      "licencia": null,
-      "handicap": null,
-      "handicap_display": null,
-      "estado": null,
-      "ultima_modificacion": null,
-      "ultima_modificacion_display": null,
-      "error": "no se encontró una fila que coincida con la licencia esperada",
-      "rank": null,
+      "nombre": "IGNACIO ZABALLOS PALOP",
+      "licencia": "LV17911563",
+      "handicap": 26.9,
+      "handicap_display": "26,9",
+      "estado": "Válido",
+      "ultima_modificacion": "2026-08-12",
+      "ultima_modificacion_display": "12-08-2026",
+      "error": null,
+      "rank": 1,
       "prev_rank": null,
       "trend": "new"
     }
