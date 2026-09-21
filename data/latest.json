@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T06:02:48.430783+00:00",
+  "generated_at": "2026-09-21T06:02:44.039640+00:00",
   "players": [
     {
       "id": "guillermo",
@@ -19,11 +19,11 @@
       "id": "jose_luis",
       "nombre": "JOSE LUIS MELLADO MOLERES",
       "licencia": "LV06908776",
-      "handicap": 15.8,
-      "handicap_display": "15,8",
+      "handicap": 16.1,
+      "handicap_display": "16,1",
       "estado": "Válido",
-      "ultima_modificacion": "2026-08-07",
-      "ultima_modificacion_display": "07-08-2026",
+      "ultima_modificacion": "2026-09-21",
+      "ultima_modificacion_display": "21-09-2026",
       "error": null,
       "rank": 2,
       "prev_rank": 2,
