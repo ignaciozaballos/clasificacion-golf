@@ -2,26 +2,30 @@
 """
 Scraper de hándicaps RFEGolf para un grupo de amigos.
 
-Consulta https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx para cada
-persona listada en friends.json, guarda un histórico semanal en
-data/history.json y escribe data/latest.json con el ranking actual y la
-tendencia (subida/bajada/igual) respecto a la semana anterior.
+NOTA (2026-09-29): la RFEG rediseñó por completo su web de consulta de
+hándicap. La antigua página ServicioHandicap.aspx (que se consultaba por
+nombre y apellidos, devolviendo una tabla HTML) ha dejado de funcionar.
+La nueva consulta vive en https://rfegolf.es/aprende-mejora/consulta-handicap
+y busca por licencia federativa a través de una API JSON pública
+(Typesense por detrás), que es lo que este script consulta ahora.
+
+Para cada persona listada en friends.json (usando su "licencia_esperada"),
+consulta esa API, guarda un histórico semanal en data/history.json y
+escribe data/latest.json con el ranking actual y la tendencia
+(subida/bajada/igual) respecto a la semana anterior.
 
 Pensado para ejecutarse desde GitHub Actions una vez a la semana, pero puede
 lanzarse también en local con: python scraper.py
 """
 
 import json
-import re
 import sys
-import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
 
-BASE_URL = "https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx"
+API_URL = "https://rfegolf.es/wp-json/handicap-search/v1/search"
 ROOT = Path(__file__).resolve().parent
 FRIENDS_FILE = ROOT / "friends.json"
 HISTORY_FILE = ROOT / "data" / "history.json"
@@ -31,41 +35,62 @@ HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
-    )
+    ),
+    "Accept": "application/json",
+    "Referer": "https://rfegolf.es/aprende-mejora/consulta-handicap",
+}
+
+# Solo tenemos confirmado que 1 = federado con hándicap válido/activo.
+# Cualquier otro código se muestra tal cual (sin inventar una etiqueta)
+# para que se note en la web si aparece un caso distinto.
+FEDERATED_STATUS = {
+    1: "Válido",
 }
 
 
-def strip_accents(text: str) -> str:
-    return "".join(
-        c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)
-    )
-
-
-def parse_handicap(raw: str) -> float | None:
-    """'26,9' -> 26.9. Devuelve None si no es un número (p.ej. 'N/D')."""
-    raw = raw.strip().replace(",", ".")
+def parse_handicap(raw) -> float | None:
+    """'26.9' (float o string) -> 26.9. Devuelve None si no es un número."""
+    if raw is None:
+        return None
     try:
-        return float(raw)
+        return float(str(raw).replace(",", "."))
     except ValueError:
         return None
 
 
-def parse_fecha(raw: str) -> str | None:
-    """'12-08-2026' -> '2026-08-12' (ISO), para poder ordenar/comparar."""
-    raw = raw.strip()
+def fmt_handicap_display(value: float | None) -> str | None:
+    if value is None:
+        return None
+    # Estilo español con coma decimal, como mostraba la web antigua.
+    return f"{value:.1f}".replace(".", ",")
+
+
+def parse_fecha_iso(raw) -> str | None:
+    """La API ya devuelve la fecha en formato ISO (YYYY-MM-DD)."""
+    if not raw:
+        return None
     try:
-        return datetime.strptime(raw, "%d-%m-%Y").date().isoformat()
+        datetime.strptime(raw, "%Y-%m-%d")
+        return raw
     except ValueError:
         return None
+
+
+def fmt_fecha_display(iso: str | None) -> str | None:
+    if not iso:
+        return None
+    y, m, d = iso.split("-")
+    return f"{d}-{m}-{y}"
 
 
 def fetch_player(friend: dict) -> dict:
-    """Lanza la consulta a la RFEG y extrae la fila que coincide con la licencia esperada."""
-    params = {
-        "HNom": friend["nombre"],
-        "HAp1": friend["apellido1"],
-        "HAp2": friend.get("apellido2", ""),
-    }
+    """Busca a la persona en la API de la RFEG por su licencia (o, si no hay
+    licencia guardada, por su nombre completo) y devuelve sus datos."""
+
+    expected_lic = friend.get("licencia_esperada", "").strip().upper()
+    query = expected_lic or (
+        f"{friend['nombre']} {friend['apellido1']} {friend.get('apellido2', '')}".strip()
+    )
 
     result = {
         "id": friend["id"],
@@ -79,79 +104,64 @@ def fetch_player(friend: dict) -> dict:
         "error": None,
     }
 
+    if not query:
+        result["error"] = "sin licencia ni nombre para buscar en friends.json"
+        return result
+
     try:
-        resp = requests.get(BASE_URL, params=params, headers=HEADERS, timeout=30)
+        resp = requests.get(
+            API_URL,
+            params={"q": query, "size": 5},
+            headers=HEADERS,
+            timeout=30,
+        )
         resp.raise_for_status()
-    except requests.RequestException as exc:
-        result["error"] = f"fallo de red: {exc}"
+        payload = resp.json()
+    except (requests.RequestException, ValueError) as exc:
+        result["error"] = f"fallo de red o respuesta no válida de la API: {exc}"
         return result
 
-    soup = BeautifulSoup(resp.text, "html.parser")
-
-    # La tabla de resultados es un GridView de ASP.NET; su id termina en
-    # "gvSearchResult". Cada fila de datos tiene 5 celdas:
-    # Nombre | Licencia | Handicap | Estado | Fecha modificación
-    table = soup.find(id=re.compile(r"gvSearchResult$"))
-    if table is None:
-        result["error"] = "no se encontró la tabla de resultados (¿cambió la web?)"
+    hits = ((payload.get("data") or {}).get("hits")) or []
+    if not hits:
+        result["error"] = "la API de la RFEG no devolvió ningún resultado para esta búsqueda"
         return result
 
-    rows = table.find_all("tr")
     candidate = None
-    all_candidates = []
-    expected_lic = re.sub(r"\s+", "", friend.get("licencia_esperada", "")).upper()
-    lic_pattern = re.compile(r"^[A-Za-z]{1,3}\d{4,}$")
-
-    for row in rows:
-        cells = [c.get_text(strip=True) for c in row.find_all("td")]
-        if len(cells) < 5:
-            continue  # fila de cabecera u otra cosa
-
-        # La tabla incluye columnas vacías de maquetación (botones, etc.) antes
-        # y después de los datos, así que la licencia no está siempre en la
-        # misma posición. La localizamos por su formato (letras + números) y
-        # leemos el resto de columnas en relación a ella.
-        lic_idx = None
-        for i, c in enumerate(cells):
-            if lic_pattern.fullmatch(c):
-                lic_idx = i
-                break
-        if lic_idx is None or lic_idx < 1 or lic_idx + 3 >= len(cells):
+    all_found = []
+    for hit in hits:
+        doc = hit.get("document") or {}
+        lic = (doc.get("guid_licence") or "").strip().upper()
+        all_found.append(f"{doc.get('full_name')} ({lic})")
+        if expected_lic and lic != expected_lic:
             continue
-
-        nombre = cells[lic_idx - 1]
-        licencia = cells[lic_idx]
-        handicap = cells[lic_idx + 1]
-        estado = cells[lic_idx + 2]
-        fecha = cells[lic_idx + 3]
-
-        all_candidates.append((nombre, licencia, handicap, estado, fecha))
-
-        lic_norm = re.sub(r"\s+", "", licencia).upper()
-        if expected_lic and lic_norm != expected_lic:
-            continue
-        candidate = (nombre, licencia, handicap, estado, fecha)
+        candidate = doc
         break
 
     if candidate is None:
-        if all_candidates:
-            found = "; ".join(f"{n} ({l})" for n, l, h, e, f in all_candidates)
+        if expected_lic:
             result["error"] = (
-                f"no se encontró una fila que coincida con la licencia esperada "
-                f"'{expected_lic}'. Filas encontradas: {found}"
+                f"ninguno de los resultados coincide con la licencia esperada "
+                f"'{expected_lic}'. Encontrados: {'; '.join(all_found)}"
             )
-        else:
-            result["error"] = "no se encontró ninguna fila de datos reconocible en la tabla"
-        return result
+            return result
+        # Sin licencia guardada (fallback por nombre): usamos el primer
+        # resultado, avisando de que es menos fiable que buscar por licencia.
+        candidate = hits[0].get("document") or {}
 
-    nombre, licencia, handicap, estado, fecha = candidate
-    result["nombre"] = nombre
-    result["licencia"] = licencia
-    result["handicap"] = parse_handicap(handicap)
-    result["handicap_display"] = handicap
-    result["estado"] = estado
-    result["ultima_modificacion"] = parse_fecha(fecha)
-    result["ultima_modificacion_display"] = fecha
+    handicap_val = parse_handicap(candidate.get("handicap"))
+    status_code = candidate.get("enum_federated_status")
+
+    result["nombre"] = candidate.get("full_name")
+    result["licencia"] = candidate.get("guid_licence")
+    result["handicap"] = handicap_val
+    result["handicap_display"] = fmt_handicap_display(handicap_val)
+    result["estado"] = (
+        FEDERATED_STATUS.get(status_code, f"Estado {status_code}")
+        if status_code is not None
+        else None
+    )
+    result["ultima_modificacion"] = parse_fecha_iso(candidate.get("date_hdc_updated_at"))
+    result["ultima_modificacion_display"] = fmt_fecha_display(result["ultima_modificacion"])
     return result
 
 
