@@ -51,7 +51,7 @@
   .wrap {
     max-width: 640px;
     margin: 0 auto;
-    padding: 18px 16px 60px;
+    padding: 18px 14px 60px;
   }
 
   header.hero {
@@ -75,6 +75,7 @@
     gap: 6px;
     flex-wrap: wrap;
     margin-bottom: 14px;
+    position: relative;
   }
 
   .filter-tabs button {
@@ -87,24 +88,75 @@
     padding: 8px 15px;
     border-radius: 999px;
     cursor: pointer;
+    white-space: nowrap;
   }
 
-  .filter-tabs button:hover { border-color: var(--muted-2); }
+  .filter-tabs > button:hover { border-color: var(--muted-2); }
 
-  .filter-tabs button[data-active="true"] {
+  .filter-tabs > button[data-active="true"] {
     background: var(--primary);
     color: #fff;
     border-color: var(--primary);
     box-shadow: 0 4px 10px rgba(22, 163, 74, .25);
   }
 
+  .dropdown-wrap { position: relative; }
+
+  .dropdown-trigger::after {
+    content: '';
+    display: inline-block;
+    margin-left: 6px;
+    border: 4px solid transparent;
+    border-top-color: currentColor;
+    border-bottom: none;
+    vertical-align: middle;
+    opacity: .7;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 20;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 12px 28px rgba(20, 30, 24, .16);
+    padding: 6px;
+    min-width: 150px;
+  }
+
+  .dropdown-menu.open { display: block; }
+
+  .dropdown-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .dropdown-menu button:hover { background: var(--panel-2); }
+
+  .dropdown-menu button[data-selected="true"] {
+    color: var(--primary);
+    background: rgba(22, 163, 74, .1);
+  }
+
   .col-heads {
     display: grid;
-    grid-template-columns: 24px minmax(100px, 1fr) 88px 50px 28px 78px;
-    gap: 8px;
-    min-width: 440px;
-    padding: 0 16px;
-    font-size: 10.5px;
+    grid-template-columns: 20px minmax(0, 1fr) 46px 22px 54px;
+    gap: 6px;
+    padding: 0 14px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--muted-2);
     letter-spacing: .03em;
@@ -112,11 +164,9 @@
     margin-bottom: 8px;
   }
 
-  .col-heads span:nth-child(4),
-  .col-heads span:nth-child(6) { text-align: right; }
-  .col-heads span:nth-child(5) { text-align: center; }
-
-  .board-wrap { overflow-x: auto; }
+  .col-heads span:nth-child(3),
+  .col-heads span:nth-child(5) { text-align: right; }
+  .col-heads span:nth-child(4) { text-align: center; }
 
   ol.board {
     list-style: none;
@@ -125,18 +175,17 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-width: 440px;
   }
 
   .row {
     display: grid;
-    grid-template-columns: 24px minmax(100px, 1fr) 88px 50px 28px 78px;
-    gap: 8px;
+    grid-template-columns: 20px minmax(0, 1fr) 46px 22px 54px;
+    gap: 6px;
     align-items: center;
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
-    padding: 12px 16px;
+    padding: 10px 12px;
     box-shadow: 0 2px 8px rgba(20, 30, 24, .04);
     cursor: pointer;
     transition: transform .1s ease, box-shadow .12s ease;
@@ -177,35 +226,42 @@
   }
 
   .rank {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
     color: var(--row-ink, var(--muted-2));
   }
 
+  .name-cell { min-width: 0; }
+
   .name {
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 700;
     color: var(--row-ink, var(--text));
-  }
-
-  .status-line {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--row-sub, var(--muted));
-    margin-top: 1px;
-  }
-
-  .licencia {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--row-sub, var(--muted-2));
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
+  .sub-line {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--row-sub, var(--muted-2));
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .status-line {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--row-sub, var(--muted));
+    margin-top: 1px;
+    white-space: normal;
+  }
+
   .handicap {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
     text-align: right;
     color: var(--row-ink, var(--text));
@@ -217,13 +273,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
     background: #fff;
     box-shadow: 0 1px 4px rgba(20, 30, 24, .18);
+    flex-shrink: 0;
   }
 
   .pill.up { color: var(--good); }
@@ -232,7 +289,7 @@
   .pill.new { color: var(--muted-2); }
 
   .mod {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     text-align: right;
     color: var(--row-sub, var(--muted-2));
@@ -269,6 +326,14 @@
     font-weight: 600;
     margin-top: 12px;
   }
+
+  @media (max-width: 360px) {
+    .wrap { padding-left: 10px; padding-right: 10px; }
+    .col-heads { padding: 0 10px; gap: 4px; }
+    .row { padding: 9px 10px; gap: 4px; }
+    .name { font-size: 12.5px; }
+    .handicap { font-size: 15px; }
+  }
 </style>
 </head>
 <body>
@@ -292,21 +357,27 @@
 
   <div class="filter-tabs">
     <button type="button" id="btn-top10" data-active="false">Top 10</button>
-    <button type="button" id="btn-recent" data-active="false">Act. últ. 180 d.</button>
+    <div class="dropdown-wrap" id="upd-wrap">
+      <button type="button" class="dropdown-trigger" id="btn-recent" data-active="false">Última actualización</button>
+      <div class="dropdown-menu" id="upd-menu">
+        <button type="button" data-days="7">Últimos 7 días</button>
+        <button type="button" data-days="30">Últimos 30 días</button>
+        <button type="button" data-days="60">Últimos 60 días</button>
+        <button type="button" data-days="180">Últimos 180 días</button>
+        <button type="button" data-days="">Todos</button>
+      </div>
+    </div>
   </div>
 
   <div class="col-heads">
     <span>#</span>
     <span>Jugador</span>
-    <span>Licencia</span>
     <span>Hcp</span>
     <span></span>
     <span>Últ. act.</span>
   </div>
 
-  <div class="board-wrap">
-    <ol class="board" id="board"></ol>
-  </div>
+  <ol class="board" id="board"></ol>
 
   <div id="state-area"></div>
 
@@ -371,15 +442,15 @@
     return { cls: 'same', glyph: '=' };
   }
 
-  const filterState = { top10: false, recent: false };
+  const filterState = { top10: false, recentDays: null };
   let currentSnapshot = null;
 
   function applyFilters(players) {
     let out = players;
-    if (filterState.recent) {
+    if (filterState.recentDays !== null) {
       out = out.filter(p => {
         const days = daysSince(p.ultima_modificacion);
-        return days !== null && days <= 180;
+        return days !== null && days <= filterState.recentDays;
       });
     }
     if (filterState.top10) {
@@ -402,7 +473,7 @@
       const rankClass = (p.rank && p.rank <= 5) ? ` rank-${p.rank}` : '';
       li.className = 'row' + rankClass + (p.id === CONFIG.YOU_ID ? ' you' : '');
 
-      const errorNote = p.error
+      const warnNote = p.error
         ? `<div class="status-line" style="color:#fff;">${p.error}</div>`
         : (p.estado && p.estado.toLowerCase() !== 'válido'
             ? `<div class="status-line">${p.estado}</div>`
@@ -412,11 +483,11 @@
 
       li.innerHTML = `
         <div class="rank num">${p.rank ?? '–'}</div>
-        <div>
+        <div class="name-cell">
           <div class="name">${p.nombre ?? '(sin datos)'}</div>
-          ${errorNote}
+          <div class="sub-line">${p.licencia ?? '—'}</div>
+          ${warnNote}
         </div>
-        <div class="licencia num">${p.licencia ?? '—'}</div>
         <div class="handicap num">${p.handicap_display ?? '—'}</div>
         <div class="trend"><span class="pill ${t.cls}" title="${p.trend}">${t.glyph}</span></div>
         <div class="mod num" title="${fmtDate(p.ultima_modificacion)}">${fmtDaysAgo(p.ultima_modificacion)}</div>
@@ -453,10 +524,36 @@
     if (currentSnapshot) renderRows(applyFilters(currentSnapshot.players || []));
   });
 
-  document.getElementById('btn-recent').addEventListener('click', function () {
-    filterState.recent = !filterState.recent;
-    this.dataset.active = String(filterState.recent);
-    if (currentSnapshot) renderRows(applyFilters(currentSnapshot.players || []));
+  // Desplegable "Última actualización" (7 / 30 / 60 / 180 días, o Todos)
+  const updWrap = document.getElementById('upd-wrap');
+  const updBtn = document.getElementById('btn-recent');
+  const updMenu = document.getElementById('upd-menu');
+
+  updBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    updMenu.classList.toggle('open');
+  });
+
+  updMenu.querySelectorAll('button').forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      const raw = opt.dataset.days;
+      const days = raw === '' ? null : parseInt(raw, 10);
+      filterState.recentDays = days;
+
+      updBtn.textContent = days === null ? 'Última actualización' : `Últ. ${days} días`;
+      updBtn.dataset.active = String(days !== null);
+
+      updMenu.querySelectorAll('button').forEach(function (b) {
+        b.dataset.selected = String(b === opt);
+      });
+
+      updMenu.classList.remove('open');
+      if (currentSnapshot) renderRows(applyFilters(currentSnapshot.players || []));
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!updWrap.contains(e.target)) updMenu.classList.remove('open');
   });
 
   async function load() {
