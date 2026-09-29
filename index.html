@@ -8,322 +8,303 @@
 <link rel="icon" type="image/svg+xml" href="icon-trophy.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1F3A2E">
+<meta name="theme-color" content="#16A34A">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #F5F1E6;
-    --cream-line: #E4DDC9;
-    --ink: #21261F;
-    --ink-soft: #5C6459;
-    --fairway: #1F3A2E;
-    --fairway-soft: #4A6656;
-    --up: #2F6B3A;
-    --up-bg: #E4EFE2;
-    --down: #A83C34;
-    --down-bg: #F4E4E1;
-    --same: #A9791F;
-    --same-bg: #F2E9D4;
-    --gold-bg: #E7C766;
-    --gold-ink: #4A3600;
-    --silver-bg: #D9DBD3;
-    --silver-ink: #33362F;
-    --bronze-bg: #D6A06A;
-    --bronze-ink: #432808;
-    --top5-bg: #EFE7C9;
-    --top5-ink: #3B3620;
+    --bg: #EEF4F0;
+    --panel: #FFFFFF;
+    --panel-2: #F5F9F6;
+    --line: #E3EAE4;
+    --line-soft: #EDF2EE;
+    --text: #16241C;
+    --muted: #64766B;
+    --muted-2: #97A79D;
+    --primary: #16A34A;
+    --primary-2: #0D7D39;
+    --gold: #D4AF37;
+    --gold-2: #A3831F;
+    --silver: #9AA3AD;
+    --silver-2: #707882;
+    --bronze: #BD7B45;
+    --bronze-2: #8F5A2C;
+    --bad: #E0483C;
+    --good: #16A34A;
+    --radius: 20px;
+    --radius-sm: 12px;
   }
 
   * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    background: var(--cream);
-    color: var(--ink);
-    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
-  .page {
-    max-width: 720px;
+  .num { font-variant-numeric: tabular-nums; }
+
+  .wrap {
+    max-width: 640px;
     margin: 0 auto;
-    padding: 3rem 1.5rem 4rem;
+    padding: 18px 16px 60px;
   }
 
-  .masthead {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-bottom: 2px solid var(--fairway);
-    padding-bottom: 1.25rem;
-    margin-bottom: 0.25rem;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  h1.title {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 30px;
-    margin: 0;
-    color: var(--fairway);
-    letter-spacing: 0.01em;
+  header.hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    color: #fff;
+    margin-bottom: 14px;
+    box-shadow: 0 10px 30px rgba(22, 163, 74, .25);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
   }
 
-  .title-icon {
-    flex-shrink: 0;
-    color: var(--fairway);
-  }
+  header.hero .hero-icon { flex-shrink: 0; }
+  header.hero h1 { margin: 0 0 4px; font-size: 21px; font-weight: 800; letter-spacing: .2px; }
+  header.hero .sub { font-size: 12.5px; opacity: .85; font-weight: 600; }
 
-  .updated {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--ink-soft);
-    text-align: right;
-    line-height: 1.5;
-  }
-
-  .filters {
+  .filter-tabs {
     display: flex;
-    gap: 10px;
-    margin: 1.25rem 0 0.25rem;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
   }
 
-  .filter-btn {
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 7px 16px;
+  .filter-tabs button {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 15px;
     border-radius: 999px;
-    border: 1px solid var(--fairway);
-    background: transparent;
-    color: var(--fairway);
     cursor: pointer;
   }
 
-  .filter-btn:hover {
-    background: rgba(31, 58, 46, 0.08);
-  }
+  .filter-tabs button:hover { border-color: var(--muted-2); }
 
-  .filter-btn[data-active="true"] {
-    background: var(--fairway);
-    color: var(--cream);
-  }
-
-  .filter-btn[data-active="true"]:hover {
-    background: var(--fairway-soft);
-  }
-
-  .board-wrap {
-    overflow-x: auto;
+  .filter-tabs button[data-active="true"] {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(22, 163, 74, .25);
   }
 
   .col-heads {
     display: grid;
-    grid-template-columns: 26px minmax(108px, 1fr) 92px 50px 28px 90px;
+    grid-template-columns: 24px minmax(100px, 1fr) 88px 50px 28px 78px;
     gap: 8px;
-    min-width: 460px;
-    padding: 0.75rem 0.25rem 0.5rem;
-    font-size: 12px;
-    color: var(--ink-soft);
-    border-bottom: 1px solid var(--cream-line);
+    min-width: 440px;
+    padding: 0 16px;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--muted-2);
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
   }
 
   .col-heads span:nth-child(4),
-  .col-heads span:nth-child(6) {
-    text-align: right;
-  }
+  .col-heads span:nth-child(6) { text-align: right; }
+  .col-heads span:nth-child(5) { text-align: center; }
 
-  .col-heads span:nth-child(5) {
-    text-align: center;
-  }
+  .board-wrap { overflow-x: auto; }
 
   ol.board {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 440px;
   }
 
   .row {
     display: grid;
-    grid-template-columns: 26px minmax(108px, 1fr) 92px 50px 28px 90px;
+    grid-template-columns: 24px minmax(100px, 1fr) 88px 50px 28px 78px;
     gap: 8px;
-    min-width: 460px;
     align-items: center;
-    padding: 0.85rem 0.25rem;
-    border-bottom: 1px solid var(--cream-line);
-    background: var(--cream);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    box-shadow: 0 2px 8px rgba(20, 30, 24, .04);
     cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: transform .1s ease, box-shadow .12s ease;
   }
 
   .row:hover,
   .row.selected {
-    transform: scale(1.02);
-    box-shadow: 0 6px 16px rgba(33, 38, 31, 0.18);
-    border-radius: 6px;
-    border-bottom-color: transparent;
-    position: relative;
-    z-index: 2;
+    transform: scale(1.015);
+    box-shadow: 0 10px 22px rgba(20, 30, 24, .14);
   }
 
-  .row.you {
-    box-shadow: inset 4px 0 0 var(--fairway);
-  }
+  .row.you { outline: 2px solid var(--primary); outline-offset: 1px; }
 
-  .row.rank-1,
-  .row.rank-2,
-  .row.rank-3,
+  .row.rank-1 {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+    border: none;
+    box-shadow: 0 10px 24px rgba(163, 131, 31, .32);
+    --row-ink: #fff;
+    --row-sub: rgba(255, 255, 255, .82);
+  }
+  .row.rank-2 {
+    background: linear-gradient(135deg, var(--silver) 0%, var(--silver-2) 100%);
+    border: none;
+    box-shadow: 0 10px 24px rgba(112, 120, 130, .28);
+    --row-ink: #fff;
+    --row-sub: rgba(255, 255, 255, .82);
+  }
+  .row.rank-3 {
+    background: linear-gradient(135deg, var(--bronze) 0%, var(--bronze-2) 100%);
+    border: none;
+    box-shadow: 0 10px 24px rgba(143, 90, 44, .3);
+    --row-ink: #fff;
+    --row-sub: rgba(255, 255, 255, .82);
+  }
   .row.rank-4,
   .row.rank-5 {
-    margin: 2px 0;
-    border-bottom: none;
-    border-radius: 6px;
+    background: var(--panel-2);
   }
 
-  .row.rank-1 { background: var(--gold-bg); --row-ink: var(--gold-ink); }
-  .row.rank-2 { background: var(--silver-bg); --row-ink: var(--silver-ink); }
-  .row.rank-3 { background: var(--bronze-bg); --row-ink: var(--bronze-ink); }
-  .row.rank-4,
-  .row.rank-5 { background: var(--top5-bg); --row-ink: var(--top5-ink); }
-
   .rank {
-    font-family: 'Fraunces', serif;
-    font-size: 18px;
-    color: var(--row-ink, var(--fairway-soft));
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--row-ink, var(--muted-2));
   }
 
   .name {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--row-ink, var(--ink));
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--row-ink, var(--text));
   }
 
   .status-line {
-    font-size: 12px;
-    color: var(--ink-soft);
-    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--row-sub, var(--muted));
+    margin-top: 1px;
   }
 
   .licencia {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--row-ink, var(--ink-soft));
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--row-sub, var(--muted-2));
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .handicap {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: 800;
     text-align: right;
-    font-weight: 500;
-    color: var(--row-ink, var(--ink));
+    color: var(--row-ink, var(--text));
   }
 
-  .trend {
-    display: flex;
-    justify-content: flex-end;
-  }
+  .trend { display: flex; justify-content: center; }
 
   .pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 800;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(20, 30, 24, .18);
   }
 
-  .pill.up { background: var(--up-bg); color: var(--up); }
-  .pill.down { background: var(--down-bg); color: var(--down); }
-  .pill.same { background: var(--same-bg); color: var(--same); }
-  .pill.new { background: var(--cream-line); color: var(--ink-soft); }
+  .pill.up { color: var(--good); }
+  .pill.down { color: var(--bad); }
+  .pill.same { color: var(--gold-2); }
+  .pill.new { color: var(--muted-2); }
 
   .mod {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 700;
     text-align: right;
-    color: var(--row-ink, var(--ink-soft));
+    color: var(--row-sub, var(--muted-2));
     white-space: nowrap;
   }
 
   .legend {
     display: flex;
-    gap: 1.5rem;
-    margin-top: 1.75rem;
-    font-size: 12px;
-    color: var(--ink-soft);
+    gap: 14px;
+    margin: 16px 4px 0;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-weight: 700;
+    flex-wrap: wrap;
   }
 
   .legend span { display: flex; align-items: center; gap: 6px; }
-
-  .legend .pill { width: 18px; height: 18px; font-size: 10px; }
+  .legend .pill { width: 18px; height: 18px; font-size: 10px; box-shadow: 0 1px 3px rgba(20, 30, 24, .15); }
 
   .state {
-    padding: 3rem 0.25rem;
+    padding: 3rem .25rem;
     text-align: center;
-    color: var(--ink-soft);
+    color: var(--muted);
     font-size: 14px;
   }
 
   .error-box {
-    background: var(--down-bg);
-    color: var(--down);
-    border-radius: 6px;
-    padding: 1rem 1.25rem;
+    background: rgba(224, 72, 60, .12);
+    border: 1px solid rgba(224, 72, 60, .35);
+    color: var(--bad);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
     font-size: 13px;
-    margin-top: 1rem;
+    font-weight: 600;
+    margin-top: 12px;
   }
 </style>
 </head>
 <body>
-<div class="page">
+<div class="wrap">
 
-  <div class="masthead">
-    <h1 class="title">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M8 3.5h8v3.5a4 4 0 0 1-8 0V3.5z"/>
-        <path d="M8 4.5H5.2a1 1 0 0 0-1 1v.8a3 3 0 0 0 3 3"/>
-        <path d="M16 4.5h2.8a1 1 0 0 1 1 1v.8a3 3 0 0 1-3 3"/>
-        <line x1="12" y1="11" x2="12" y2="15"/>
-        <line x1="9" y1="19.5" x2="15" y2="19.5"/>
-        <line x1="9" y1="19.5" x2="9" y2="16"/>
-        <line x1="15" y1="19.5" x2="15" y2="16"/>
-      </svg>
-      <span>CLASIFICACIÓN</span>
-      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-        <line x1="6" y1="2.5" x2="6" y2="21" stroke="#8C8A7E" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M6 4 L16.5 7.2 L6 10.4 Z" fill="#B5473A"/>
-        <circle cx="17.5" cy="19" r="1.8" fill="#2F6B3A"/>
-      </svg>
-    </h1>
-    <div class="updated" id="updated">cargando…</div>
+  <header class="hero">
+    <svg class="hero-icon" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M8 3.5h8v3.5a4 4 0 0 1-8 0V3.5z"/>
+      <path d="M8 4.5H5.2a1 1 0 0 0-1 1v.8a3 3 0 0 0 3 3"/>
+      <path d="M16 4.5h2.8a1 1 0 0 1 1 1v.8a3 3 0 0 1-3 3"/>
+      <line x1="12" y1="11" x2="12" y2="15"/>
+      <line x1="9" y1="19.5" x2="15" y2="19.5"/>
+      <line x1="9" y1="19.5" x2="9" y2="16"/>
+      <line x1="15" y1="19.5" x2="15" y2="16"/>
+    </svg>
+    <div>
+      <h1>Clasificación</h1>
+      <div class="sub" id="updated">cargando…</div>
+    </div>
+  </header>
+
+  <div class="filter-tabs">
+    <button type="button" id="btn-top10" data-active="false">Top 10</button>
+    <button type="button" id="btn-recent" data-active="false">Act. últ. 180 d.</button>
   </div>
 
-  <div class="filters">
-    <button type="button" class="filter-btn" id="btn-top10" data-active="false">Top 10</button>
-    <button type="button" class="filter-btn" id="btn-recent" data-active="false">Act. últ. 180 d.</button>
+  <div class="col-heads">
+    <span>#</span>
+    <span>Jugador</span>
+    <span>Licencia</span>
+    <span>Hcp</span>
+    <span></span>
+    <span>Últ. act.</span>
   </div>
 
   <div class="board-wrap">
-    <div class="col-heads">
-      <span>#</span>
-      <span>Jugador</span>
-      <span>Licencia</span>
-      <span>Hcp</span>
-      <span></span>
-      <span>Últ. act.</span>
-    </div>
-
     <ol class="board" id="board"></ol>
   </div>
 
@@ -422,7 +403,7 @@
       li.className = 'row' + rankClass + (p.id === CONFIG.YOU_ID ? ' you' : '');
 
       const errorNote = p.error
-        ? `<div class="status-line" style="color: var(--down);">${p.error}</div>`
+        ? `<div class="status-line" style="color:#fff;">${p.error}</div>`
         : (p.estado && p.estado.toLowerCase() !== 'válido'
             ? `<div class="status-line">${p.estado}</div>`
             : '');
@@ -430,15 +411,15 @@
       const t = trendPill(p.trend);
 
       li.innerHTML = `
-        <div class="rank">${p.rank ?? '–'}</div>
+        <div class="rank num">${p.rank ?? '–'}</div>
         <div>
           <div class="name">${p.nombre ?? '(sin datos)'}</div>
           ${errorNote}
         </div>
-        <div class="licencia">${p.licencia ?? '—'}</div>
-        <div class="handicap">${p.handicap_display ?? '—'}</div>
+        <div class="licencia num">${p.licencia ?? '—'}</div>
+        <div class="handicap num">${p.handicap_display ?? '—'}</div>
         <div class="trend"><span class="pill ${t.cls}" title="${p.trend}">${t.glyph}</span></div>
-        <div class="mod" title="${fmtDate(p.ultima_modificacion)}">${fmtDaysAgo(p.ultima_modificacion)}</div>
+        <div class="mod num" title="${fmtDate(p.ultima_modificacion)}">${fmtDaysAgo(p.ultima_modificacion)}</div>
       `;
       board.appendChild(li);
     }
