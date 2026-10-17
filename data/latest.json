@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T06:05:55.998889+00:00",
+  "generated_at": "2026-10-17T14:55:05.917401+00:00",
   "players": [
     {
       "id": "guillermo",
@@ -103,11 +103,11 @@
       "id": "ignacio",
       "nombre": "IGNACIO ZABALLOS PALOP",
       "licencia": "LV17911563",
-      "handicap": 26.4,
-      "handicap_display": "26,4",
+      "handicap": 26.1,
+      "handicap_display": "26,1",
       "estado": "Válido",
-      "ultima_modificacion": "2026-10-11",
-      "ultima_modificacion_display": "11-10-2026",
+      "ultima_modificacion": "2026-10-16",
+      "ultima_modificacion_display": "16-10-2026",
       "error": null,
       "rank": 8,
       "prev_rank": 8,
